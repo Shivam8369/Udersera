@@ -12,13 +12,14 @@ const store = configureStore({
   reducer: rootReducer,
 });
 
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
         <App />
-        <Toaster />
+        {/* <Toaster  /> */}
       </BrowserRouter>
     </Provider>
   </React.StrictMode>
