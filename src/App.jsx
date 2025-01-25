@@ -25,6 +25,7 @@ import AddCourse from "./Components/core/Dashboard/AddCourse";
 import MyCourses from "./Components/core/Dashboard/MyCourses";
 import EditCourse from "./Components/core/Dashboard/EditCourse.jsx";
 import InstructorDashboard from "./Components/core/Dashboard/InstructorDashboard";
+import Catalog from "./pages/Catalog.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -56,6 +57,8 @@ function App() {
         <Route path="/about" element={<About />} />
 
         <Route path="/contact" element={<Contact />} />
+
+        <Route path="/catalog/:catalog" element={<Catalog />} />
 
         <Route
           element={

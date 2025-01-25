@@ -55,3 +55,12 @@ export const courseEndpoints = {
   COURSE_CATEGORIES_API: BASE_URL + "/course/showAllCategories",
   ADD_COURSE_TO_CATEGORY_API: BASE_URL + "/course/addCourseToCategory",
 };
+
+
+export const catalogData = {
+  CATALOGPAGEDATA_API: BASE_URL + "/course/getCategoryPageDetails",
+};
+
+export const ratingsEndpoints = {
+  REVIEWS_DETAILS_API: BASE_URL + "/course/getReviews",
+};
