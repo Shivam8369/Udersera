@@ -4,7 +4,7 @@ import { BsChevronDown } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { Link, matchPath, useLocation } from "react-router-dom";
 
-import logo from "../../assets/Logo/Udersera-logo/logo-dark-full.png";
+import logo from "../../assets/Logo/Udersera-logo/Udersera.png";
 import { NavbarLinks } from "../../data/navbar-links";
 import { apiConnector } from "../../services/apiconnector";
 import { categories } from "../../services/apis";
