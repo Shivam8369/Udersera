@@ -224,18 +224,22 @@ exports.getAllCourses = async (req, res) => {
 exports.getCourseDetails = async (req, res) => {
   try {
     const { courseId } = req.body;
-    const courseDetails = await Course.find({ _id: courseId })
-      .populate({ path: "instructor", populate: { path: "additionalDetails" } })
-      .populate("category")
+    const courseDetails = await Course.findOne({ _id: courseId })
       .populate({
-        //only populate user name and image
-        path: "ratingAndReviews",
+        path: "instructor",
         populate: {
-          path: "user",
-          select: "firstName lastName accountType image",
+          path: "additionalDetails",
         },
       })
-      .populate({ path: "courseContent", populate: { path: "subSection" } })
+      .populate("category")
+      .populate("ratingAndReviews")
+      .populate({
+        path: "courseContent",
+        populate: {
+          path: "subSection",
+          select: "-videoUrl",
+        },
+      })
       .exec();
 
     if (courseDetails.length == 0) {
@@ -244,10 +248,20 @@ exports.getCourseDetails = async (req, res) => {
         message: "Course Not Found",
       });
     }
+
+    let totalDurationInSeconds = 0;
+    courseDetails.courseContent.forEach((content) => {
+      content.subSection.forEach((subSection) => {
+        totalDurationInSeconds += parseInt(subSection?.timeDuration);
+      });
+    });
+
+    // Convert total duration to a readable format
+    const totalDuration = convertSecondsToDuration(totalDurationInSeconds);
     return res.status(200).json({
       success: true,
       message: "Course fetched successfully now",
-      data: courseDetails,
+      data: { courseDetails, totalDuration },
     });
   } catch (error) {
     console.log(error);
@@ -438,7 +452,6 @@ exports.markLectureAsComplete = async (req, res) => {
     });
   }
 };
-
 
 exports.getFullCourseDetails = async (req, res) => {
   try {

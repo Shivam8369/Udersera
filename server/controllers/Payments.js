@@ -199,7 +199,7 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
     const enrolledStudent = await User.findById(userId);
     await mailSender(
       enrolledStudent.email,
-      `EduSkill Payment successful`,
+      `Udersera Payment successful`,
       paymentSuccess(
         amount / 100,
         paymentId,

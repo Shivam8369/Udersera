@@ -26,6 +26,7 @@ import MyCourses from "./Components/core/Dashboard/MyCourses";
 import EditCourse from "./Components/core/Dashboard/EditCourse.jsx";
 import InstructorDashboard from "./Components/core/Dashboard/InstructorDashboard";
 import Catalog from "./pages/Catalog.jsx";
+import CourseDetails from "./pages/CourseDetails.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -59,6 +60,8 @@ function App() {
         <Route path="/contact" element={<Contact />} />
 
         <Route path="/catalog/:catalog" element={<Catalog />} />
+
+        <Route path="courses/:courseId" element={<CourseDetails/>} />
 
         <Route
           element={

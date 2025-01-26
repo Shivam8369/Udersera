@@ -41,7 +41,7 @@ export const getAllCourses = async () => {
   return result;
 };
 
-export const fetchCourseDetails = async (courseId, dispatch) => {
+export const fetchCourseDetails = async (courseId) => {
 
   let result = null;
   try {
@@ -53,7 +53,7 @@ export const fetchCourseDetails = async (courseId, dispatch) => {
     if (!response.data.success) {
       throw new Error(response.data.message);
     }
-    result = response.data.data[0];
+    result = response.data;
   } catch (error) {
     console.log("COURSE_DETAILS_API API ERROR............", error);
     result = error.response.data;
