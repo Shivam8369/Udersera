@@ -11,7 +11,7 @@ import CourseAccordionBar from "../Components/core/Course/CourseAccordionBar"
 import CourseDetailsCard from "../Components/core/Course/CourseDetailsCard"
 import { formatDate } from "../services/formatDate"
 import { fetchCourseDetails } from "../services/operations/courseDetailsAPI"
-// import { buyCourse } from "../services/operations/studentFeaturesAPI"
+import { buyCourse } from "../services/operations/studentFeaturesAPI"
 import GetAvgRating from "../utils/avgRating"
 import Spinner from "../Components/common/Spinner"
 
@@ -82,10 +82,10 @@ function CourseDetails() {
         createdAt,
     } = response.data?.courseDetails
 
-    const handleBuyCourse = () => {
+    const handleBuyCourse = async () => {
         if (token) {
-            // buyCourse(token, [courseId], user, navigate, dispatch)
-            console.log("buyed the course");
+           await buyCourse(token, [courseId], user, navigate, dispatch);
+            console.log("buy the course");
             return
         }
         setConfirmationModal({
