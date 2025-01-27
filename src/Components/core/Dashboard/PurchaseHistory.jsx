@@ -1,39 +1,26 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
+import { getPaymentHistory } from '../../../services/operations/studentFeaturesAPI';
+import { useSelector } from "react-redux"
 
 function PurchaseHistory() {
-  // Dummy data for purchase history
-  const dummyPurchaseData = [
-    {
-      id: 1,
-      courseName: 'React for Beginners',
-      purchaseDate: '2024-12-01',
-      amount: '₹500',
-    },
-    {
-      id: 2,
-      courseName: 'Advanced Node.js',
-      purchaseDate: '2024-11-20',
-      amount: '₹700',
-    },
-    {
-      id: 3,
-      courseName: 'Python Data Science',
-      purchaseDate: '2024-11-15',
-      amount: '₹800',
-    },
-    {
-      id: 4,
-      courseName: 'Full Stack Web Development',
-      purchaseDate: '2024-11-05',
-      amount: '₹1200',
-    },
-    {
-      id: 5,
-      courseName: 'Machine Learning Basics',
-      purchaseDate: '2024-10-25',
-      amount: '₹900',
-    },
-  ];
+  const [purchaseData, setPurchaseData] = useState([]);
+  const { token } = useSelector((state) => state.auth)
+
+  useEffect(() => {
+    const fetchPurchaseHistory = async () => {
+      const history = await getPaymentHistory(token);
+      if (history) {
+        console.log("history", history);
+        setPurchaseData(history);
+      }
+    };
+    fetchPurchaseHistory();
+  }, []);
+
+  const formattedDate = (date) => {
+    return new Date(date).toISOString().split('T')[0];
+  };
 
   return (
     <div className='p-6 bg-gray-900 text-richblack-50 rounded-lg'>
@@ -45,19 +32,28 @@ function PurchaseHistory() {
               <th className='px-6 py-3 text-lg font-medium text-gray-300'>Course Name</th>
               <th className='px-6 py-3 text-lg font-medium text-gray-300'>Purchase Date</th>
               <th className='px-6 py-3 text-lg font-medium text-gray-300'>Amount</th>
+              <th className='px-6 py-3 text-lg font-medium text-gray-300'>Status</th>
             </tr>
           </thead>
           <tbody>
-            {dummyPurchaseData.map((purchase, index) => (
+            {purchaseData.map((purchase, index) => (
               <tr
-                key={purchase.id}
-                className={`${
-                  index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-700'
-                } border-b-2 border-richblack-700 hover:bg-gray-600 transition duration-150` }
+                key={purchase._id}
+                className={`${index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-700'
+                  } border-b-2 border-richblack-700 hover:bg-gray-600 transition duration-150`}
               >
-                <td className='px-6 py-4 text-white font-semibold'>{purchase.courseName}</td>
-                <td className='px-6 py-4 text-gray-300'>{purchase.purchaseDate}</td>
-                <td className='px-6 py-4 text-gray-300'>{purchase.amount}</td>
+                <td className='px-6 py-4 text-white font-semibold'>
+                  {purchase.courses.map(course => course.courseName).join(', ')}
+                </td>
+                <td className='px-6 py-4 text-gray-300'>
+                  {formattedDate(purchase.createdAt)}
+                </td>
+                <td className='px-6 py-4 text-gray-300'>
+                  ₹{purchase.amount}
+                </td>
+                <td className='px-6 py-4 text-gray-300'>
+                  {purchase.status}
+                </td>
               </tr>
             ))}
           </tbody>

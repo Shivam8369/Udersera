@@ -1,13 +1,15 @@
 const { instance } = require("../config/razorpay");
 const Course = require("../models/Course");
 const User = require("../models/User");
+const PaymentHistory = require("../models/PaymentHistory");
 const mailSender = require("../utils/mailSender");
-const {courseEnrollmentEmail} = require("../mail/templates/courseEnrollmentEmail");
+const {
+  courseEnrollmentEmail,
+} = require("../mail/templates/courseEnrollmentEmail");
 const { paymentSuccess } = require("../mail/templates/paymentSuccess");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const CourseProgress = require("../models/CourseProgress");
-// import { paymentSuccess } from "../mail/templates/paymentSuccess";
 
 exports.capturePayment = async (req, res) => {
   try {
@@ -102,6 +104,17 @@ exports.verifySignature = async (req, res) => {
 
     if (generatedSignature === razorpay_signature) {
       await enrollStudents(courses, userId, res);
+      const payment = await instance.payments.fetch(razorpay_payment_id);
+      await PaymentHistory.create({
+        userId,
+        courses,
+        orderId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
+        amount: payment.amount / 100, 
+        currency: payment.currency,
+        status: "successful",
+        paymentMethod: "razorpay"
+    });
     }
   } catch (error) {
     console.error(error);
@@ -219,6 +232,29 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: error.message,
+    });
+  }
+};
+
+
+exports.getPaymentHistory = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const paymentHistory = await PaymentHistory.find({userId} )
+      .populate("courses", "courseName createdAt price") // Populate course details
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      data: paymentHistory,
+    });
+  } catch (error) {
+    console.error("Get Payment History Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch payment history",
+      error: error.message,
     });
   }
 };
