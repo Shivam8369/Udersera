@@ -11,7 +11,7 @@ export const endpoints = {
 }
 
 export const categories = {
-  CATEGORIES_API: BASE_URL+"/course/showAllCategories"
+  CATEGORIES_API: BASE_URL + "/course/showAllCategories"
 };
 
 export const contactUsEndpoint = {
@@ -63,4 +63,11 @@ export const catalogData = {
 
 export const ratingsEndpoints = {
   REVIEWS_DETAILS_API: BASE_URL + "/course/getReviews",
+};
+
+
+export const studentEndpoints = {
+  COURSE_PAYMENT_API: BASE_URL + "/payment/capturePayment",
+  COURSE_VERIFY_API: BASE_URL + "/payment/verifyPayment",
+  SEND_PAYMENT_SUCCESS_EMAIL_API: BASE_URL + "/payment/sendPaymentSuccessEmail",
 };
