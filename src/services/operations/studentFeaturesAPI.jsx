@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 import logo from "../../assets/Logo/logo-light-full.png";
 import { resetCart } from "../../slices/cartSlice";
 
-const { COURSE_PAYMENT_API, COURSE_VERIFY_API, SEND_PAYMENT_SUCCESS_EMAIL_API } = studentEndpoints;
+const { COURSE_PAYMENT_API, COURSE_VERIFY_API, SEND_PAYMENT_SUCCESS_EMAIL_API, GET_PAYMENT_HISTORY } = studentEndpoints;
 
 function loadScript(src) {
     return new Promise((resolve) => {
@@ -98,7 +98,7 @@ async function verifyPayment(response, courses, token, navigate, dispatch,) {
     const toastId = toast.loading("Please wait while we verify your payment");
     console.log("verifyPayment -> courses", courses.courses);
     try {
-    
+
         const res = await apiConnector("POST", COURSE_VERIFY_API, {
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_order_id: response.razorpay_order_id,
@@ -122,6 +122,29 @@ async function verifyPayment(response, courses, token, navigate, dispatch,) {
         console.log(err);
     }
     toast.dismiss(toastId);
+}
+
+export async function getPaymentHistory(token   ) {
+    const toastId = toast.loading("Loading payment history...");
+    try {
+        const response = await apiConnector("GET", GET_PAYMENT_HISTORY, null, {
+            Authorization: `Bearer ${token}`,
+        });
+
+        if (!response?.data?.success) {
+            throw new Error(response?.data?.message);
+        }
+
+        toast.success("Payment history fetched successfully");
+        return response?.data?.data;
+
+    } catch (error) {
+        console.log("GET_PAYMENT_HISTORY API ERROR............", error);
+        toast.error(error.message || "Could not fetch payment history");
+        return null;
+    } finally {
+        toast.dismiss(toastId);
+    }
 }
 
 
