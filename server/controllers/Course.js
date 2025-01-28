@@ -397,8 +397,8 @@ exports.searchCourse = async (req, res) => {
 };
 
 exports.markLectureAsComplete = async (req, res) => {
-  const { courseId, subSectionId, userId } = req.body;
-
+  const { courseId, subSectionId } = req.body;
+  const userId = req.user.id;
   // Validate required fields
   if (!courseId || !subSectionId || !userId) {
     return res.status(400).json({

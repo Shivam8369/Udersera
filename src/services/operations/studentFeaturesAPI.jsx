@@ -134,8 +134,6 @@ export async function getPaymentHistory(token   ) {
         if (!response?.data?.success) {
             throw new Error(response?.data?.message);
         }
-
-        toast.success("Payment history fetched successfully");
         return response?.data?.data;
 
     } catch (error) {
