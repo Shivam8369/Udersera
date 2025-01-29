@@ -22,6 +22,7 @@ const {
   LECTURE_COMPLETION_API,
   ADD_COURSE_TO_CATEGORY_API,
   SEARCH_COURSES_API,
+  GET_ADMIN_STATS_DATA_API
 } = courseEndpoints;
 
 export const getAllCourses = async () => {
@@ -457,4 +458,24 @@ export const createCategory = async (data, token) => {
   }
   toast.dismiss(toastId);
   return success;
+};
+
+export const getAdminStatsData = async (token) => {
+  const toastId = toast.loading("Loading...");
+  let result;
+  try {
+    const response = await apiConnector("GET", GET_ADMIN_STATS_DATA_API,null, {
+      Authorization: `Bearer ${token}`,
+    });
+    console.log("GETTING ADMIN-STATE-DATA API RESPONSE............", response);
+    if (!response?.data?.success) {
+      throw new Error("Could Not GET THE STATE");
+    }
+    result = response?.data?.data;
+  } catch (error) {
+    console.log("GETTING ADMIN-STATE-DATA API ERROR............", error);
+    toast.error(error.message);
+  }
+  toast.dismiss(toastId);
+  return result;
 };

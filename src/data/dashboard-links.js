@@ -50,9 +50,16 @@ export const sidebarLinks = [
   },
 
   {
-    name: "Admin Panel",
-    path: "/dashboard/admin-panel",
+    name: "Create Category",
+    path: "/dashboard/create-category",
     type: ACCOUNT_TYPE.ADMIN,
-    icon: "VscHistory",
+    icon: "VscChromeRestore",
+  },
+
+  {
+    name: "DashBoard",
+    path: "/dashboard/admin-dashboard",
+    type: ACCOUNT_TYPE.ADMIN,
+    icon: "VscDashboard",
   },
 ];

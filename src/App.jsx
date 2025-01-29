@@ -29,6 +29,8 @@ import Catalog from "./pages/Catalog.jsx";
 import CourseDetails from "./pages/CourseDetails.jsx";
 import VideoDetails from "./Components/core/ViewCourse/VideoDetails.jsx";
 import ViewCourse from "./pages/ViewCourse.jsx";
+import CreateCategory from "./Components/core/Dashboard/CreateCategory";
+import AdminDashBoard from "./Components/core/Dashboard/AdminDashBoard";
 
 function App() {
   const dispatch = useDispatch();
@@ -92,6 +94,13 @@ function App() {
               <Route path="dashboard/add-course" element={<AddCourse />} />
               <Route path="dashboard/edit-course/:courseId" element={<EditCourse />} />
               <Route path="dashboard/my-courses" element={<MyCourses />} />
+            </>
+          )}
+
+          {user?.accountType === ACCOUNT_TYPE.ADMIN && (
+            <>
+              <Route path="dashboard/create-category" element={<CreateCategory />} />
+              <Route path="dashboard/admin-dashboard" element={<AdminDashBoard />} />
             </>
           )}
         </Route>

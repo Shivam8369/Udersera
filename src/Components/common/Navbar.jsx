@@ -113,7 +113,7 @@ function Navbar() {
         </nav>
         {/* Login / Signup / Dashboard */}
         <div className="hidden items-center gap-x-4 md:flex">
-          {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
+          {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && user?.accountType !== ACCOUNT_TYPE.ADMIN && (
             <Link to="/dashboard/cart" className="relative">
               <AiOutlineShoppingCart className="text-2xl text-richblack-100" />
               {totalItems > 0 && (
@@ -210,7 +210,7 @@ function Navbar() {
               )}
             </li>
           ))}
-          {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
+          {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && user?.accountType !== ACCOUNT_TYPE.ADMIN && (
             <Link to="/dashboard/cart" className="relative">
               <AiOutlineShoppingCart className="text-2xl text-richblack-100" />
               {totalItems > 0 && (

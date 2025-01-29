@@ -47,6 +47,7 @@ const {
 
 // Importing Middlewares
 const { auth, isInstructor, isStudent, isAdmin } = require("../middlewares/auth")
+const { getAdminDashboardStats } = require("../controllers/Profile")
 
 // ********************************************************************************************************
 //                                      Course routes
@@ -99,5 +100,8 @@ router.post("/addCourseToCategory", auth, isInstructor, addCourseToCategory);
 router.post("/createRating", auth, isStudent, createRating)
 router.get("/getAverageRating", getAverageRating)
 router.get("/getReviews", getAllRating)
+
+// Admin Route
+router.get("/getAdminStats", auth, isAdmin, getAdminDashboardStats)
 
 module.exports = router;
