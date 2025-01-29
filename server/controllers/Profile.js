@@ -1,6 +1,8 @@
 const Profile = require("../models/Profile");
 const User = require("../models/User");
 const Course = require("../models/Course");
+const Category = require("../models/Category");
+const RatingAndReview = require("../models/RatingAndReview");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
 // Method for updating a profile
@@ -31,7 +33,9 @@ exports.updateProfile = async (req, res) => {
     // Save the updated profile
     await profile.save();
     await userDetails.save();
-    const updatedUserDetails = await User.findById(id).populate("additionalDetails").exec();
+    const updatedUserDetails = await User.findById(id)
+      .populate("additionalDetails")
+      .exec();
     return res.json({
       success: true,
       message: "Profile updated successfully",
@@ -211,6 +215,158 @@ exports.instructorDashboard = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
+    });
+  }
+};
+
+exports.getAdminDashboardStats = async (req, res) => {
+  try {
+    // Get total number of students and instructors
+    const userStats = await User.aggregate([
+      {
+        $group: {
+          _id: "$accountType",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    // Convert userStats array to object for easier access
+    const userCounts = userStats.reduce((acc, curr) => {
+      acc[curr._id] = curr.count;
+      return acc;
+    }, {});
+
+
+    // Calculate total revenue
+    const totalRevenue = await Course.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "studentsEnrolled",
+          foreignField: "_id",
+          as: "enrolledStudents",
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: {
+            $sum: { $multiply: ["$price", { $size: "$studentsEnrolled" }] },
+          },
+        },
+      },
+    ]);
+
+    // Get courses count by category
+    const coursesByCategory = await Category.aggregate([
+      {
+        $lookup: {
+          from: "courses",
+          localField: "courses",
+          foreignField: "_id",
+          as: "courseDetails",
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          courseCount: { $size: "$courseDetails" },
+        },
+      },
+    ]);
+
+
+    // Get top rated courses (top 5)
+    const topRatedCourses = await Course.aggregate([
+      {
+        $lookup: {
+          from: "ratingandreviews",
+          localField: "ratingAndReviews",
+          foreignField: "_id",
+          as: "ratings",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "instructor",
+          foreignField: "_id",
+          as: "instructorDetails",
+        },
+      },
+      {
+        $project: {
+          courseName: 1,
+          courseDescription: 1,
+          "instructorDetails.firstName": 1,
+          "instructorDetails.lastName": 1,
+          averageRating: {
+            $avg: "$ratings.rating",
+          },
+          totalStudents: { $size: "$studentsEnrolled" },
+          price: 1,
+        },
+      },
+      {
+        $sort: { averageRating: -1 },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+
+    // Get additional metrics
+    const additionalMetrics = await Promise.all([
+      // Total number of courses
+      Course.countDocuments(),
+      // Total number of published courses
+      Course.countDocuments({ status: "Published" }),
+      // Total number of reviews
+      RatingAndReview.countDocuments(),
+      // Average rating across all courses
+      RatingAndReview.aggregate([
+        {
+          $group: {
+            _id: null,
+            averageRating: { $avg: "$rating" },
+          },
+        },
+      ]),
+    ]);
+
+    const dashboardStats = {
+      users: {
+        totalStudents: userCounts.Student || 0,
+        totalInstructors: userCounts.Instructor || 0,
+        totalAdmins: userCounts.Admin || 0,
+      },
+      courses: {
+        total: additionalMetrics[0],
+        published: additionalMetrics[1],
+        categoryWise: coursesByCategory,
+      },
+      revenue: {
+        total: totalRevenue[0]?.total || 0,
+      },
+      ratings: {
+        totalReviews: additionalMetrics[2],
+        averageRating: additionalMetrics[3][0]?.averageRating || 0,
+        topRatedCourses,
+      },
+    };
+
+    return res.status(200).json({
+      success: true,
+      message: "Admin dashboard stats retrieved successfully",
+      data: dashboardStats,
+    });
+  } catch (error) {
+    console.error("Error in getAdminDashboardStats:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to retrieve admin dashboard stats",
+      error: error.message,
     });
   }
 };

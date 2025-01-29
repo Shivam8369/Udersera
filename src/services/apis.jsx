@@ -54,6 +54,7 @@ export const courseEndpoints = {
   CREATE_CATEGORY_API: BASE_URL + "/course/createCategory",
   COURSE_CATEGORIES_API: BASE_URL + "/course/showAllCategories",
   ADD_COURSE_TO_CATEGORY_API: BASE_URL + "/course/addCourseToCategory",
+  GET_ADMIN_STATS_DATA_API: BASE_URL + "/course/getAdminStats",
 };
 
 
