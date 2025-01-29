@@ -15,7 +15,7 @@ export default function Sidebar() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [confirmationModal, setConfirmationModal] = useState(null); 
+  const [confirmationModal, setConfirmationModal] = useState(null);
 
   if (profileLoading || authLoading) {
     return (
@@ -27,7 +27,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <div className="flex h-[calc(100vh-3.5rem)] min-w-[220px] flex-col border-r-[1px] border-r-richblack-700 bg-richblack-800 py-10 hidden md:block">
+      <div className="h-[calc(100vh-3.5rem)] min-w-[220px] flex-col border-r-[1px] border-r-richblack-700 bg-richblack-800 py-10 hidden lg:flex">
         <div className="flex flex-col">
           {sidebarLinks.map((link) => {
             if (link.type && user?.accountType !== link.type) return null;
@@ -64,8 +64,30 @@ export default function Sidebar() {
             </div>
           </button>
         </div>
-        
+
       </div>
+
+
+
+
+      {/* Mobile sideBar */}
+      <div className='flex lg:hidden fixed bottom-0 justify-between items-center px-2 py-1 bg-richblack-900 z-50 w-full'>
+        <div className='flex flex-row gap-1 w-full justify-between'>
+          {
+            sidebarLinks.map((link) => {
+              if (link.type && user?.accountType !== link.type) return null;
+              return (
+                <SidebarLink key={link.id} link={link} iconName={link.icon} />
+              )
+            })}
+          <SidebarLink
+            link={{ name: "Settings", path: "/dashboard/settings" }}
+            iconName="VscSettingsGear"
+          />
+        </div>
+      </div>
+
+      
       {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
     </>
   );

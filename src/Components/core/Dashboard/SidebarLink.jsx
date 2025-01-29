@@ -1,13 +1,13 @@
 import * as Icons from "react-icons/vsc";
-// import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { NavLink, matchPath, useLocation } from "react-router-dom";
 
-// import { resetCourseState } from "../../../slices/courseSlice";
+import { resetCourseState } from "../../../slices/courseSlice";
 
 export default function SidebarLink({ link, iconName }) {
   const Icon = Icons[iconName];
   const location = useLocation();
-//   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const matchRoute = (route) => {
     return matchPath({ path: route }, location.pathname);
@@ -16,12 +16,12 @@ export default function SidebarLink({ link, iconName }) {
   return (
     <NavLink
       to={link.path}
-      onClick={() => console.log("Reset course data slice: ")}
-      className={`relative px-8 py-2 text-sm font-medium ${
+      onClick={() => dispatch(resetCourseState())}
+      className={`relative px-4 py-2 text-sm font-medium ${
         matchRoute(link.path)
           ? "bg-yellow-800 text-yellow-50"
           : "bg-opacity-0 text-richblack-300"
-      } transition-all duration-200`}
+      } transition-all duration-200  lg:px-8` }
     >
       <span
         className={`absolute left-0 top-0 h-full w-[0.15rem] bg-yellow-50 ${
@@ -30,8 +30,8 @@ export default function SidebarLink({ link, iconName }) {
       ></span>
       <div className="flex items-center gap-x-2">
         {/* Icon Goes Here */}
-        <Icon className="text-lg" />
-        <span>{link.name}</span>
+        <Icon className="md:text-lg text-3xl" />
+        <span className="hidden md:block">{link.name}</span>
       </div>
     </NavLink>
   );
