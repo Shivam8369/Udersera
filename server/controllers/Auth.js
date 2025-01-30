@@ -268,7 +268,7 @@ exports.changePassword = async (req, res) => {
 		try {
 			const emailResponse = await mailSender(
 				userDetails.email,
-				"EduSkill- Password Updated",
+				"Udersera- Password Updated",
 				passwordUpdate(
 					userDetails.email,
 					` ${userDetails.firstName} ${userDetails.lastName}`
