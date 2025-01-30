@@ -25,5 +25,8 @@
     "nodemon": "^3.1.7",
     "otp-generator": "^4.0.1",
     "razorpay": "^2.9.4"
+  },
+  "engines": {
+    "node": ">=16.9"
   }
 }
