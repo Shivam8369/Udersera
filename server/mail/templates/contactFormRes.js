@@ -87,7 +87,7 @@ const contactUsEmail = ({firstName, lastName, email, message, phoneNo}) => {
                 <p>We appreciate your interest and will get back to you shortly. </p>
             </div>
             <div class="support">If you have any further questions or need immediate assistance, please feel free to reach
-                out to us at <a href="mailto:info@EduSkill.com">info@EduSkill.com</a>. We are here to help!</div>
+                out to us at <a href="mailto:info@Udersera.com">info@Udersera.com</a>. We are here to help!</div>
         </div>
     </body>
     
