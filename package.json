@@ -6,7 +6,7 @@
   "author": "Shivam Sahu",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-repo-url"
+    "url": "git+https://github.com/Shivam8369/Udersera.git"
   },
   "scripts": {
     "start": "react-scripts start",

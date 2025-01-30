@@ -3,6 +3,7 @@ const mailSender = require("../utils/mailSender");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const { passwordUpdate } = require("../mail/templates/passwordUpdate");
+require("dotenv").config();
 
 exports.resetPasswordToken = async (req, res) => {
   try {
@@ -27,7 +28,9 @@ exports.resetPasswordToken = async (req, res) => {
     console.log("DETAILS", updatedDetails);
 
     // const url = `https://studynotion.fun/update-password/${token}`;
-    const url = `http://localhost:3000/update-password/${token}`;
+    // const url = `http://localhost:3000/update-password/${token}`;
+    const url = `${process.env.FRONTEND_URL || "http://localhost:3000"}/update-password/${token}`;
+
 
     await mailSender(
       email,

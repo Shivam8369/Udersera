@@ -7,7 +7,6 @@ const {
   courseEnrollmentEmail,
 } = require("../mail/templates/courseEnrollmentEmail");
 const { paymentSuccess } = require("../mail/templates/paymentSuccess");
-const mongoose = require("mongoose");
 const crypto = require("crypto");
 const CourseProgress = require("../models/CourseProgress");
 
@@ -52,7 +51,7 @@ exports.capturePayment = async (req, res) => {
 
     // Create payment options for Razorpay
     const options = {
-      amount: totalAmount * 100, // Convert to paise (smallest unit of currency)
+      amount: totalAmount * 100, // Convert to paisa (smallest unit of currency)
       currency: "INR",
       receipt: Math.random(Date.now()).toString(), // Random receipt for identification
     };
