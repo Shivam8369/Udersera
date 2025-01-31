@@ -51,7 +51,26 @@ To install the StudyNotion platform, follow these steps:
 - Create a `.env` file in the `Server` directory with the following environment variables in the ,env-example
 - Create a `.env` file in the root folder and add the `REACT_APP_BASE_URL:<your-backend-url-or-your-localhost>`
 
+## [Architectural Diagram 💁](https://excalidraw.com/#json=JGLvyl5-sfDeH_wcmIqgG,IYLGCjXyqCsJyulHzM3Vyg) 
+
 ## Preview
+
+![Screenshot 2025-01-31 092940](https://github.com/user-attachments/assets/3db1606b-2a4c-47ae-b79c-ab1b728c963c) 
+<br> <br> <br>
+![Screenshot 2025-01-31 093054](https://github.com/user-attachments/assets/ffb196b3-9599-4a6a-baff-06a616e7db8a) 
+<br> <br> <br>
+![Screenshot 2025-01-31 093008](https://github.com/user-attachments/assets/67773b3a-0030-4512-9ac9-f993d6f75b95)  
+<br> <br> <br>
+![Screenshot 2025-01-31 093348](https://github.com/user-attachments/assets/3e450a81-4877-4875-996f-7dfdfd6c6051)
+<br> <br> <br>
+![Screenshot 2025-01-31 093313](https://github.com/user-attachments/assets/b50ff83b-b1b9-4fc1-aeb4-5163220551e4)
+<br> <br> <br>
+![Screenshot 2025-01-31 093258](https://github.com/user-attachments/assets/cbcc32ed-8325-4c8b-919b-60c508987fcf)
+<br> <br> <br>
+![Screenshot 2025-01-31 093151](https://github.com/user-attachments/assets/4c888eba-ac93-4763-a006-db93bf9a0668)
+<br> <br> <br>
+![Screenshot 2025-01-31 093117](https://github.com/user-attachments/assets/89a73ec3-172d-4783-9b05-e00d69e8a805)
+<br> <br> <br>
 
 
 # Folder Structure Overview
@@ -65,27 +84,27 @@ To install the StudyNotion platform, follow these steps:
 
 ## 2.2 Backend Structure (./server)
 server/<br>
-├── config/           # Configuration modules <br>
-├── controllers/      # Business logic<br>
-├── middlewares/      # Request interceptors<br>
-├── models/          # Database schemas<br>
-├── routes/          # API endpoints<br>
-├── utils/           # Helper functions<br>
-└── mail/            # Email templates<br>
+├── config/      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    # Configuration modules <br>
+├── controllers/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    # Business logic<br>
+├── middlewares/  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  # Request interceptors<br>
+├── models/     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  # Database schemas<br>
+├── routes/     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     # API endpoints<br>
+├── utils/      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     # Helper functions<br>
+└── mail/     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       # Email templates<br>
 
 
 
 ## 2.3 Frontend Structure (./src)
 src/<br>
-├── Components/     # UI components   <br>
-├── assets/         # Static resources<br>
-├── data/           # Static data/config<br>
-├── hooks/          # Custom React hooks<br>
-├── pages/          # Route components<br>
-├── reducers/       # State management<br>
-├── services/       # API integration<br>
-├── slices/         # Redux state slices<br>
-└── utils/          # Helper functions<br>
+├── Components/   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   # UI components   <br>
+├── assets/     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     # Static resources<br>
+├── data/       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      # Static data/config<br>
+├── hooks/      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      # Custom React hooks<br>
+├── pages/       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     # Route components<br>
+├── reducers/    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     # State management<br>
+├── services/     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   # API integration<br>
+├── slices/        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   # Redux state slices<br>
+└── utils/         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   # Helper functions<br>
 
 ## Note
 
