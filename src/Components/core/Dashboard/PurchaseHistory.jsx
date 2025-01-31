@@ -2,18 +2,22 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { getPaymentHistory } from '../../../services/operations/studentFeaturesAPI';
 import { useSelector } from "react-redux"
+import Spinner from '../../common/Spinner';
 
 function PurchaseHistory() {
   const [purchaseData, setPurchaseData] = useState([]);
   const { token } = useSelector((state) => state.auth)
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const fetchPurchaseHistory = async () => {
+      setLoading(true);
       const history = await getPaymentHistory(token);
       if (history) {
         console.log("history", history);
         setPurchaseData(history);
       }
+      setLoading(false);
     };
     fetchPurchaseHistory();
   }, []);
@@ -22,6 +26,19 @@ function PurchaseHistory() {
     return new Date(date).toISOString().split('T')[0];
   };
 
+  if (loading) {
+    return (
+        <div className='text-white text-center text-2xl h-screen flex justify-center items-center'>
+            <Spinner/>
+        </div>
+    );
+}
+  if(loading == false && purchaseData.length == 0){
+    return (
+     <div className='text-white h-[500px] flex justify-center items-center text-center text-2xl'>You have not purchased any course yet</div>
+    
+    )
+  }
   return (
     <div className='p-6 bg-gray-900 text-richblack-50 rounded-lg'>
       <h2 className='text-3xl font-bold mb-6'>Purchase History</h2>

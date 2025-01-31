@@ -13,7 +13,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
 
     const { user } = useSelector((state) => state.profile)
     const { token } = useSelector((state) => state.auth)
-    const {cart} = useSelector((state) => state.cart);
+    const { cart } = useSelector((state) => state.cart);
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { thumbnail: ThumbnailImage, price: CurrentPrice, } = course
@@ -46,9 +46,13 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
 
     return (
         <>
-            <div className={`flex flex-col gap-4 rounded-md bg-richblack-700 p-4 text-richblack-5`} >
+            <div className={`flex transform transition-transform duration-300 ease-in-out hover:scale-95 flex-col gap-4 rounded-md bg-richblack-700 p-4 text-richblack-5`} >
                 {/* Course Image */}
-                <img src={ThumbnailImage} alt={course?.courseName} className="max-h-[300px] min-h-[180px] w-[400px] overflow-hidden rounded-2xl object-cover md:max-w-full" />
+                <img
+                    src={ThumbnailImage}
+                    alt={course?.courseName}
+                    className="max-h-[300px] min-h-[180px] w-[400px] overflow-hidden rounded-2xl object-cover md:max-w-full transform transition-transform duration-300 ease-in-out hover:scale-105"
+                />
 
                 <div className="px-4">
 
