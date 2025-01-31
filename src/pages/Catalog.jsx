@@ -5,6 +5,7 @@ import { categories } from '../services/apis';
 import { getCatalogPageData } from '../services/operations/pageAndComponentData';
 import CourseSlider from '../Components/core/Catalog/CourseSlider';
 import CatalogCard from '../Components/core/Catalog/CatalogCard';
+import Spinner from '../Components/common/Spinner';
 
 const Catalog = () => {
     const { catalog } = useParams();
@@ -57,7 +58,7 @@ const Catalog = () => {
     if (loading) {
         return (
             <div className='text-white text-center text-2xl h-screen flex justify-center items-center'>
-                Loading...
+                <Spinner/>
             </div>
         );
     }

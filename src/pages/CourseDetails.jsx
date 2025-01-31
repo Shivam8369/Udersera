@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { BiInfoCircle } from "react-icons/bi"
 import { HiOutlineGlobeAlt } from "react-icons/hi"
-import ReactMarkdown  from "react-markdown"
+import ReactMarkdown from "react-markdown"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 import ConfirmationModal from "../Components/common/ConfirmationModal"
@@ -15,9 +15,7 @@ import { buyCourse } from "../services/operations/studentFeaturesAPI"
 import GetAvgRating from "../utils/avgRating"
 import Spinner from "../Components/common/Spinner"
 
-
 function CourseDetails() {
-
     const { user } = useSelector((state) => state.profile)
     const { token } = useSelector((state) => state.auth)
     const { loading } = useSelector((state) => state.profile)
@@ -29,33 +27,26 @@ function CourseDetails() {
     const [response, setResponse] = useState(null)
     const [confirmationModal, setConfirmationModal] = useState(null)
     const [avgReviewCount, setAvgReviewCount] = useState(0)
-    const [isActive, setIsActive] = useState(Array(0))
-    const [totalNoOfLectures, setTotalNoOfLectures] = useState(0);
+    const [isActive, setIsActive] = useState([])
+    const [totalNoOfLectures, setTotalNoOfLectures] = useState(0)
 
     useEffect(() => {
-        (async () => {
+        const fetchData = async () => {
             try {
-                const res = await fetchCourseDetails(courseId);
-                console.log("res is :", res);
+                const res = await fetchCourseDetails(courseId)
                 setResponse(res)
-            }
-            catch (error) {
+            } catch (error) {
                 console.log("Could not fetch Course Details")
             }
-        })()
+        }
+        fetchData()
     }, [courseId])
 
-    // Calculating Avg Review count
     useEffect(() => {
         const count = GetAvgRating(response?.data?.courseDetails.ratingAndReviews)
         setAvgReviewCount(count)
     }, [response])
 
-    const handleActive = (id) => {
-        setIsActive(!isActive.includes(id) ? isActive.concat([id]) : isActive.filter((e) => e != id))
-    }
-
-    // Total number of lectures
     useEffect(() => {
         let lectures = 0
         response?.data?.courseDetails?.courseContent?.forEach((sec) => {
@@ -64,28 +55,15 @@ function CourseDetails() {
         setTotalNoOfLectures(lectures)
     }, [response])
 
-    if (loading || !response) {
-        return <Spinner />
+    const handleActive = (id) => {
+        setIsActive(!isActive.includes(id) 
+            ? isActive.concat([id]) 
+            : isActive.filter((e) => e !== id))
     }
-
-    const {
-        _id: course_id,
-        courseName,
-        courseDescription,
-        thumbnail,
-        price,
-        whatYouWillLearn,
-        courseContent,
-        ratingAndReviews,
-        instructor,
-        studentsEnrolled,
-        createdAt,
-    } = response.data?.courseDetails
 
     const handleBuyCourse = async () => {
         if (token) {
-           await buyCourse(token, [courseId], user, navigate, dispatch);
-            console.log("buy the course");
+            await buyCourse(token, [courseId], user, navigate, dispatch)
             return
         }
         setConfirmationModal({
@@ -98,117 +76,151 @@ function CourseDetails() {
         })
     }
 
+    if (loading || !response) {
+        return <Spinner />
+    }
+
     if (paymentLoading) {
         return (
             <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
-                <div className="spinner"></div>
+                <Spinner />
             </div>
         )
     }
 
+    const {
+        courseName,
+        courseDescription,
+        whatYouWillLearn,
+        courseContent,
+        ratingAndReviews,
+        instructor,
+        studentsEnrolled,
+        createdAt,
+    } = response.data?.courseDetails
 
     return (
-        <>
-            {/* section 1 */}
-            <div className={`relative w-full bg-richblack-800`}>
-
-                {/* Hero Section */}
-                <div className="mx-auto box-content px-4 lg:w-[1260px] 2xl:relative ">
-
-                    <div className="mx-auto grid min-h-[450px] max-w-maxContentTab justify-items-center py-8 lg:mx-0 lg:justify-items-start lg:py-0 xl:max-w-[810px]">
-
-                        <div className="relative block max-h-[30rem] lg:hidden">
-                            <div className="absolute bottom-0 left-0 h-full w-full shadow-[#161D29_0px_-64px_36px_-28px_inset]"></div>
-                            <img src={thumbnail} alt="course thumbnail" className="aspect-auto w-full" />
-                        </div>
-
-                        <div className={`z-30 my-5 flex flex-col justify-center gap-4 py-5 text-lg text-richblack-5`} >
-                            <div>
-                                <p className="text-4xl font-bold text-richblack-5 sm:text-[42px]"> {courseName} </p>
-                            </div>
-                            <p className={`text-richblack-200`}>{courseDescription}</p>
-                            <div className="text-md flex flex-wrap items-center gap-2">
+        <div className="min-h-screen bg-richblack-900">
+            {/* Hero Section */}
+            <div className="bg-richblack-800">
+                <div className="mx-auto max-w-maxContentTab px-4 py-8 lg:max-w-maxContent">
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        {/* Course Info */}
+                        <div className="lg:col-span-8">
+                            <h1 className="text-3xl font-bold text-richblack-5 sm:text-4xl">
+                                {courseName}
+                            </h1>
+                            <p className="mt-4 text-richblack-200">
+                                {courseDescription}
+                            </p>
+                            
+                            <div className="mt-4 flex flex-wrap items-center gap-2">
                                 <span className="text-yellow-25">{avgReviewCount}</span>
-                                <RatingStars Review_Count={avgReviewCount} Star_Size={24} />
-                                <span>{`(${ratingAndReviews.length} reviews)`}</span>
-                                <span>{`${studentsEnrolled.length} students enrolled`}</span>
+                                <RatingStars Review_Count={avgReviewCount} Star_Size={20} />
+                                <span className="text-richblack-200">
+                                    ({ratingAndReviews.length} reviews)
+                                </span>
+                                <span className="text-richblack-200">
+                                    {studentsEnrolled.length} students
+                                </span>
                             </div>
-                            <div>
-                                <p className=""> Created By {`${instructor.firstName} ${instructor.lastName}`} </p>
+
+                            <div className="mt-4 text-richblack-200">
+                                <p>Created by {`${instructor.firstName} ${instructor.lastName}`}</p>
                             </div>
-                            <div className="flex flex-wrap gap-5 text-lg">
-                                <p className="flex items-center gap-2"> {" "}<BiInfoCircle /> Created at {formatDate(createdAt)} </p>
-                                <p className="flex items-center gap-2"> {" "} <HiOutlineGlobeAlt /> English </p>
+
+                            <div className="mt-4 flex flex-wrap gap-4 text-richblack-200">
+                                <span className="flex items-center gap-2">
+                                    <BiInfoCircle />
+                                    Created {formatDate(createdAt)}
+                                </span>
+                                <span className="flex items-center gap-2">
+                                    <HiOutlineGlobeAlt />
+                                    English
+                                </span>
                             </div>
                         </div>
 
-                        <div className="flex w-full flex-col gap-4 border-y border-y-richblack-500 py-4 lg:hidden">
-                            <p className="space-x-3 pb-4 text-3xl font-semibold text-richblack-5"> Rs. {price} </p>
-                            <button className="yellowButton" onClick={handleBuyCourse}> Buy Now </button>
-                            <button className="blackButton">Add to Cart</button>
+                        {/* Course Details Card */}
+                        <div className="lg:col-span-4 ">
+                            <div className=" top-4 lg:top-12 lg:absolute lg:ml-14">
+                                <CourseDetailsCard 
+                                    course={response?.data?.courseDetails}
+                                    setConfirmationModal={setConfirmationModal}
+                                    handleBuyCourse={handleBuyCourse}
+                                />
+                            </div>
                         </div>
-
                     </div>
-
-                    {/* Courses Card */}
-                    <div className="right-[1rem] top-[60px] mx-auto hidden min-h-[600px] w-1/3 max-w-[410px] translate-y-24 md:translate-y-0 lg:absolute  lg:block">
-                        <CourseDetailsCard course={response?.data?.courseDetails} setConfirmationModal={setConfirmationModal} handleBuyCourse={handleBuyCourse} />
-                    </div>
-
                 </div>
-
             </div>
 
-            {/* section 2 */}
-            <div className="mx-auto box-content px-4 text-start text-richblack-5 lg:w-[1260px]">
-                <div className="mx-auto max-w-maxContentTab lg:mx-0 xl:max-w-[810px]">
+            {/* Course Content */}
+            <div className="md:mx-auto max-w-maxContentTab px-4 py-8 lg:max-w-[950px] lg:ml-6">
+                {/* What you'll learn */}
+                <div className="border border-richblack-600 p-6 rounded-lg">
+                    <h2 className="text-2xl font-bold text-richblack-5">
+                        What you'll learn
+                    </h2>
+                    <div className="mt-4 text-richblack-200">
+                        <ReactMarkdown>{whatYouWillLearn}</ReactMarkdown>
+                    </div>
+                </div>
 
-                    {/* What will you learn section */}
-                    <div className="my-8 border border-richblack-600 p-8">
-                        <p className="text-3xl font-semibold">What you'll learn</p>
-                        <div className="mt-5">
-                            <ReactMarkdown>{whatYouWillLearn}</ReactMarkdown>
-                        </div>
+                {/* Course Content */}
+                <div className="mt-8">
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                        <h2 className="text-2xl font-bold text-richblack-5">
+                            Course Content
+                        </h2>
+                        <button 
+                            className="text-yellow-25 text-sm"
+                            onClick={() => setIsActive([])}
+                        >
+                            Collapse all sections
+                        </button>
                     </div>
 
-                    {/* Course Content Section */}
-                    <div className="max-w-[830px] ">
+                    <div className="mt-4 text-richblack-200">
+                        <span>{courseContent.length} sections</span>
+                        <span className="mx-2">•</span>
+                        <span>{totalNoOfLectures} lectures</span>
+                        <span className="mx-2">•</span>
+                        <span>{response.data?.totalDuration} total length</span>
+                    </div>
 
-                        <div className="flex flex-col gap-3">
-                            <p className="text-[28px] font-semibold">Course Content</p>
-                            <div className="flex flex-wrap justify-between gap-2">
+                    <div className="mt-4">
+                        {courseContent?.map((course, index) => (
+                            <CourseAccordionBar
+                                key={index}
+                                course={course}
+                                isActive={isActive}
+                                handleActive={handleActive}
+                            />
+                        ))}
+                    </div>
+                </div>
 
-                                <div className="flex gap-2">
-                                    <span> {courseContent.length} {`section(s)`} </span>
-                                    <span> {totalNoOfLectures} {`lecture(s)`} </span>
-                                    <span>{response.data?.totalDuration} total length</span>
-                                </div>
-
-                                <div>
-                                    <button className="text-yellow-25" onClick={() => setIsActive([])}> Collapse all sections </button>
-                                </div>
-
-                            </div>
+                {/* Author */}
+                <div className="mt-8">
+                    <h2 className="text-2xl font-bold text-richblack-5">
+                        Author
+                    </h2>
+                    <div className="mt-4 flex items-center gap-4">
+                        <img
+                            src={instructor.image || `https://api.dicebear.com/5.x/initials/svg?seed=${instructor.firstName} ${instructor.lastName}`}
+                            alt={instructor.firstName}
+                            className="h-12 w-12 rounded-full object-cover"
+                        />
+                        <div>
+                            <p className="text-richblack-5">
+                                {`${instructor.firstName} ${instructor.lastName}`}
+                            </p>
+                            <p className="text-sm text-richblack-200">
+                                {instructor?.additionalDetails?.about}
+                            </p>
                         </div>
-
-                        {/* Course Details Accordion */}
-                        <div className="py-4">
-                            {courseContent?.map((course, index) => (
-                                <CourseAccordionBar course={course} key={index} isActive={isActive} handleActive={handleActive} />
-                            ))
-                            }
-                        </div>
-
-                        {/* Author Details */}
-                        <div className="mb-12 py-4">
-                            <p className="text-[28px] font-semibold">Author</p>
-                            <div className="flex items-center gap-4 py-4">
-                                <img src={instructor.image ? instructor.image : `https://api.dicebear.com/5.x/initials/svg?seed=${instructor.firstName} ${instructor.lastName}`} alt="Author" className="h-14 w-14 rounded-full object-cover" />
-                                <p className="text-lg">{`${instructor.firstName} ${instructor.lastName}`}</p>
-                            </div>
-                            <p className="text-richblack-50">  {instructor?.additionalDetails?.about}  </p>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -216,11 +228,8 @@ function CourseDetails() {
             <Footer />
 
             {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
-
-        </>
-
+        </div>
     )
 }
-
 
 export default CourseDetails
