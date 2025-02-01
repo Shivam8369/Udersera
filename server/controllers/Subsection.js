@@ -5,6 +5,36 @@ const Course = require("../models/Course");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
 // Create a new sub-section for a given section
+
+const updateCourseDuration = async (sectionId) => {
+  try {
+    // Find the course that contains this section
+    const course = await Course.findOne({ courseContent: sectionId }).populate({
+      path: 'courseContent',
+      populate: {
+        path: 'subSection'
+      }
+    });
+
+    if (!course) return;
+
+    // Calculate total duration
+    let totalTime = 0;
+    for (const section of course.courseContent) {
+      const populatedSection = await Section.findById(section._id).populate('subSection');
+      for (const subSection of populatedSection.subSection) {
+        totalTime += parseFloat(subSection.timeDuration || 0);
+      }
+    }
+
+    // Update course with new total duration
+    course.totalDuration = totalTime.toFixed(2);
+    await course.save();
+  } catch (error) {
+    console.error("Error updating course duration:", error);
+  }
+};
+
 exports.createSubSection = async (req, res) => {
   try {
     // Extract necessary information from the request body
@@ -45,6 +75,8 @@ exports.createSubSection = async (req, res) => {
       { $push: { subSection: SubSectionDetails._id } },
       { new: true }
     ).populate("subSection");
+
+    await updateCourseDuration(sectionId);
 
     // Return the updated section in the response
     return res.status(200).json({ success: true, data: updatedSection });
@@ -90,6 +122,7 @@ exports.updateSubSection = async (req, res) => {
     }
 
     await subSection.save();
+    await updateCourseDuration(sectionId);
 
     // find updated section and return it
     const updatedSection = await Section.findById(sectionId).populate("subSection");
@@ -141,6 +174,8 @@ exports.deleteSubSection = async (req, res) => {
       { new: true }
     );
     const updatedSection = await Section.findById(sectionId).populate("subSection");
+    await updateCourseDuration(sectionId);
+
     return res.status(200).json({
       success: true,
       message: "Sub-section deleted",

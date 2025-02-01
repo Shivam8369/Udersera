@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { BiInfoCircle } from "react-icons/bi"
 import { HiOutlineGlobeAlt } from "react-icons/hi"
-import ReactMarkdown from "react-markdown"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 import ConfirmationModal from "../Components/common/ConfirmationModal"
@@ -56,8 +55,8 @@ function CourseDetails() {
     }, [response])
 
     const handleActive = (id) => {
-        setIsActive(!isActive.includes(id) 
-            ? isActive.concat([id]) 
+        setIsActive(!isActive.includes(id)
+            ? isActive.concat([id])
             : isActive.filter((e) => e !== id))
     }
 
@@ -104,7 +103,7 @@ function CourseDetails() {
             {/* Hero Section */}
             <div className="bg-richblack-800">
                 <div className="mx-auto max-w-maxContentTab px-4 py-8 lg:max-w-maxContent">
-                    
+
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                         {/* Course Info */}
                         <div className="lg:col-span-8">
@@ -114,7 +113,7 @@ function CourseDetails() {
                             <p className="mt-4 text-richblack-200">
                                 {courseDescription}
                             </p>
-                            
+
                             <div className="mt-4 flex flex-wrap items-center gap-2">
                                 <span className="text-yellow-25">{avgReviewCount}</span>
                                 <RatingStars Review_Count={avgReviewCount} Star_Size={20} />
@@ -144,8 +143,8 @@ function CourseDetails() {
 
                         {/* Course Details Card */}
                         <div className="lg:col-span-4 ">
-                            <div className=" top-4 lg:top-12 lg:absolute lg:ml-14">
-                                <CourseDetailsCard 
+                            <div className=" top-4 lg:top-12 lg:absolute lg:ml-6">
+                                <CourseDetailsCard
                                     course={response?.data?.courseDetails}
                                     setConfirmationModal={setConfirmationModal}
                                     handleBuyCourse={handleBuyCourse}
@@ -164,7 +163,11 @@ function CourseDetails() {
                         What you'll learn
                     </h2>
                     <div className="mt-4 text-richblack-200">
-                        <ReactMarkdown>{whatYouWillLearn}</ReactMarkdown>
+                        <ol className="list-decimal pl-5">
+                            {whatYouWillLearn.split("\n").map((item, i) => (
+                                <li key={i}>{item.replace(/^\d+\.\s*/, '')}</li> // Removes leading numbers
+                            ))}
+                        </ol>
                     </div>
                 </div>
 
@@ -174,7 +177,7 @@ function CourseDetails() {
                         <h2 className="text-2xl font-bold text-richblack-5">
                             Course Content
                         </h2>
-                        <button 
+                        <button
                             className="text-yellow-25 text-sm"
                             onClick={() => setIsActive([])}
                         >

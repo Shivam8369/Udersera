@@ -2,6 +2,35 @@ const Section = require("../models/Section");
 const Course = require("../models/Course");
 const SubSection = require("../models/SubSection");
 // CREATE a new section
+
+const updateCourseDuration = async (sectionId) => {
+  try {
+    // Find the course that contains this section
+    const course = await Course.findOne({ courseContent: sectionId }).populate({
+      path: 'courseContent',
+      populate: {
+        path: 'subSection'
+      }
+    });
+
+    if (!course) return;
+
+    // Calculate total duration
+    let totalTime = 0;
+    for (const section of course.courseContent) {
+      const populatedSection = await Section.findById(section._id).populate('subSection');
+      for (const subSection of populatedSection.subSection) {
+        totalTime += parseFloat(subSection.timeDuration || 0);
+      }
+    }
+
+    // Update course with new total duration
+    course.totalDuration = totalTime.toFixed(2);
+    await course.save();
+  } catch (error) {
+    console.error("Error updating course duration:", error);
+  }
+};
 exports.createSection = async (req, res) => {
   try {
     // Extract the required properties from the request body
@@ -136,6 +165,8 @@ exports.deleteSection = async (req, res) => {
         populate: { path: "subSection" },
       })
       .exec();
+
+      await updateCourseDuration(sectionId);
 
     return res.status(200).json({
       success: true,
