@@ -21,7 +21,7 @@ const Catalog = () => {
             try {
                 setLoading(true); // Set loading to true when fetching starts
                 const result = await apiConnector("GET", categories.CATEGORIES_API);
-                const categoryData = result.data.data.find(item => item.name.toLowerCase() === catalog);
+                const categoryData = result.data.data.find(item => item.name.toLowerCase().split(" ").join('-') === catalog);
                 if (categoryData) {
                     setCategoryID(categoryData._id);
                     setDesc(categoryData.description);

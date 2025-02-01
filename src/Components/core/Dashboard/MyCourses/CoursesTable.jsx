@@ -11,6 +11,7 @@ import { formatDate } from "../../../../services/formatDate"
 import { deleteCourse, fetchInstructorCourses} from "../../../../services/operations/courseDetailsAPI"
 import { COURSE_STATUS } from "../../../../utils/constants"
 import ConfirmationModal from "../../../common/ConfirmationModal"
+import {formatDuration}  from "../../../../utils/formatDuration"
 
 export default function CoursesTable({ courses, setCourses }) {
   const navigate = useNavigate()
@@ -100,7 +101,7 @@ export default function CoursesTable({ courses, setCourses }) {
                   </div>
                 </Td>
                 <Td className="text-sm font-medium text-richblack-100">
-                  6hr 30min
+                {formatDuration(course.totalDuration)}
                 </Td>
                 <Td className="text-sm font-medium text-richblack-100 mb-5">
                   ₹{course.price}

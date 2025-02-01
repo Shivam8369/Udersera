@@ -63,6 +63,10 @@ const coursesSchema = new mongoose.Schema(
       type: String,
       enum: ["Draft", "Published"],
     },
+    totalDuration: {
+      type: String,
+      default: "0"
+    },
   },
   { timestamps: true }
 );

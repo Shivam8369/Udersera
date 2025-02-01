@@ -51,7 +51,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
                 <img
                     src={ThumbnailImage}
                     alt={course?.courseName}
-                    className="max-h-[300px] min-h-[180px] w-[400px] overflow-hidden rounded-2xl object-cover md:max-w-full transform transition-transform duration-300 ease-in-out hover:scale-105"
+                    className="max-h-[300px] min-h-[180px] w-[400px] overflow-hidden rounded-2xl object-cover md:max-w-full transform transition-transform duration-300 ease-in-out hover:scale-105 lg:ml-6"
                 />
 
                 <div className="px-4">
@@ -79,14 +79,14 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
 
                         <p className={`my-2 text-xl font-semibold `}> This Course Includes : </p>
                         <div className="flex flex-col gap-3 text-sm text-caribbeangreen-100">
-                            {course?.instructions?.map((item, i) => {
-                                return (
-                                    <p className={`flex gap-2`} key={i}>
-                                        <BsFillCaretRightFill />
-                                        <span>{item}</span>
-                                    </p>
-                                )
-                            })}
+                            {course?.instructions?.[0] &&
+                                JSON.parse(course.instructions[0]) 
+                                    .map((item, i) => (
+                                        <p className="flex gap-2 items-start" key={i}>
+                                            <span className="font-medium min-w-[20px]">{i + 1}.</span>
+                                            <span>{item.trim()}</span>
+                                        </p>
+                                    ))}
                         </div>
 
                     </div>
