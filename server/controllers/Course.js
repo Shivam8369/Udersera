@@ -6,6 +6,7 @@ const { convertSecondsToDuration } = require("../utils/secToDuration");
 const CourseProgress = require("../models/CourseProgress");
 const Section = require("../models/Section");
 const SubSection = require("../models/SubSection");
+const { keyExists, getKey, setKey } = require("../utils/redisHelper");
 
 exports.createCourse = async (req, res) => {
   try {
@@ -224,6 +225,18 @@ exports.getAllCourses = async (req, res) => {
 exports.getCourseDetails = async (req, res) => {
   try {
     const { courseId } = req.body;
+
+    const cacheKey = `getCourse:${courseId}`;
+
+    if (await keyExists(cacheKey)) {
+      const cachedData = await getKey(cacheKey);
+      return res.status(200).json({
+        success: true,
+        message: "Course details fetched from Redis cache ✅",
+        data: JSON.parse(cachedData),
+      });
+    }
+
     const courseDetails = await Course.findOne({ _id: courseId })
       .populate({
         path: "instructor",
@@ -258,10 +271,17 @@ exports.getCourseDetails = async (req, res) => {
 
     // Convert total duration to a readable format
     const totalDuration = convertSecondsToDuration(totalDurationInSeconds);
+    const courseData = {
+      courseDetails,
+      totalDuration,
+    };
+
+    await setKey(cacheKey, JSON.stringify(courseData), 6000);
+
     return res.status(200).json({
       success: true,
       message: "Course fetched successfully now",
-      data: { courseDetails, totalDuration },
+      data: courseData,
     });
   } catch (error) {
     console.log(error);
@@ -458,6 +478,17 @@ exports.getFullCourseDetails = async (req, res) => {
     // Extract courseId from request body and userId from authenticated user
     const { courseId } = req.body;
     const userId = req.user.id;
+    const userData = await User.findById(userId).select("accountType");
+    const userAccountType = userData.accountType;
+    const cacheKey = `course:${courseId}`;
+    if (userAccountType == "Student" && await keyExists(cacheKey)) {
+      const cachedData = await getKey(cacheKey);
+      return res.status(200).json({
+        success: true,
+        data: JSON.parse(cachedData),
+        message: "Course details fetched from Redis cache ✅",
+      });
+    }
 
     // Fetch course details with necessary population
     const courseDetails = await Course.findOne({ _id: courseId })
@@ -503,13 +534,18 @@ exports.getFullCourseDetails = async (req, res) => {
     // Prepare the response data
     const completedVideos = courseProgress?.completedVideos || ["none"];
 
+    const courseData = {
+      courseDetails,
+      totalDuration,
+      completedVideos,
+    };
+    
+    if(userAccountType == "Student")
+      await setKey(cacheKey, JSON.stringify(courseData), 6000);
+
     return res.status(200).json({
       success: true,
-      data: {
-        courseDetails,
-        totalDuration,
-        completedVideos,
-      },
+      data: courseData,
     });
   } catch (error) {
     console.error("Error fetching course details:", error);

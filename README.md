@@ -22,7 +22,8 @@ Udersera is a fully functional code-tech learning platform that enables users to
 - Instructor Dashboard: Instructors have access to a comprehensive dashboard to view information about their courses, students, and income. The
   dashboard provides charts and visualizations to present data clearly and intuitively. Instructors can monitor the total number of students enrolled in
   each course, track course performance, and view their income generated from course sales.
-
+- Redis Cache for fast retrievals of data
+- Github-Action for automated deployment 
 ---
 
 ## API Design
@@ -46,6 +47,7 @@ To install the StudyNotion platform, follow these steps:
 - Set up a MongoDB database and obtain the connection URL.
 - Get up the Mail pass and Mail Port from Gmail.
 - Set up a Razorpay account and obtain the key ,secret.
+- Set up a Redis Account on redis platform.
 - Get jwt secret
 - Set up a cloudinary account and obtain cloud name,api key and api secret.
 - Create a `.env` file in the `Server` directory with the following environment variables in the ,env-example

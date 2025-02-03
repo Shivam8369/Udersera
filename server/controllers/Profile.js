@@ -4,6 +4,7 @@ const Course = require("../models/Course");
 const Category = require("../models/Category");
 const RatingAndReview = require("../models/RatingAndReview");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
+const { keyExists, getKey, setKey } = require("../utils/redisHelper");
 
 // Method for updating a profile
 exports.updateProfile = async (req, res) => {
@@ -222,6 +223,19 @@ exports.instructorDashboard = async (req, res) => {
 exports.getAdminDashboardStats = async (req, res) => {
   try {
     // Get total number of students and instructors
+
+    const cacheKey = "adminDashboardStats";
+
+    // Check if the dashboard stats data exists in Redis
+    if (await keyExists(cacheKey)) {
+      const cachedData = await getKey(cacheKey);
+      return res.status(200).json({
+        success: true,
+        message: "Admin dashboard stats fetched from Redis cache ✅",
+        data: JSON.parse(cachedData),
+      });
+    }
+
     const userStats = await User.aggregate([
       {
         $group: {
@@ -355,7 +369,8 @@ exports.getAdminDashboardStats = async (req, res) => {
         topRatedCourses,
       },
     };
-
+    await setKey(cacheKey, JSON.stringify(dashboardStats), 600);
+    
     return res.status(200).json({
       success: true,
       message: "Admin dashboard stats retrieved successfully",

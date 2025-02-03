@@ -1,6 +1,7 @@
 const RatingAndReview = require("../models/RatingAndReview");
 const Course = require("../models/Course");
 const { default: mongoose } = require("mongoose");
+const { keyExists, getKey, setKey } = require("../utils/redisHelper");
 
 //createRating
 exports.createRating = async (req, res) => {
@@ -113,21 +114,37 @@ exports.getAverageRating = async(req,res)=>{
 
 
 exports.getAllRating = async (req, res) => {
-
   try {
+    const cacheKey = "allReviewRatings";
+
+    // Check if data exists in Redis
+    if (await keyExists(cacheKey)) {
+      const cachedData = await getKey(cacheKey);
+      return res.status(200).json({
+        success: true,
+        message: "All reviews fetched from Redis cache ✅",
+        data: JSON.parse(cachedData),
+      });
+    }
+
+    // If not in Redis, fetch from MongoDB
     const allReviews = await RatingAndReview.find()
       .sort({ rating: -1 })
+      .limit(10)
       .populate({ path: "user", select: "firstName lastName email image" })
       .populate({ path: "course", select: "courseName" })
       .exec();
 
+    // Store in Redis for 10 minutes (600 seconds)
+    await setKey(cacheKey, JSON.stringify(allReviews), 21600);
+
     return res.status(200).json({
       success: true,
-      message: "all reviews fetched successfully",
+      message: "All reviews fetched from MongoDB and stored in Redis ✅",
       data: allReviews,
     });
   } catch (error) {
-    console.log(error);
+    console.error("❌ Error fetching reviews:", error);
     res.status(500).json({ message: error.message });
   }
 };
