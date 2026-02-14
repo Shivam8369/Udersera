@@ -20,7 +20,7 @@
     "express": "^4.21.0",
     "express-fileupload": "^1.5.1",
     "ioredis": "^5.4.2",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.7.0",
     "nodemailer": "^6.9.15",
     "nodemon": "^3.1.7",
@@ -28,6 +28,6 @@
     "razorpay": "^2.9.4"
   },
   "engines": {
-    "node": ">=16.9"
+    "node": ">=22.x"
   }
 }
